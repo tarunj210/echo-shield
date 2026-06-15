@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: echoshield-api
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/echoshield
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+echoshield:
+  uploads-dir: uploads/imports
+  pipeline-script: ../scripts/run_profile_pipeline.sh
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

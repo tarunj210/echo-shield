@@ -1,0 +1,94 @@
+categories:
+  - parent_label: Entertainment & Commentary
+    description: >
+      Comedy, reaction videos, commentary, memes, creator-led entertainment,
+      celebrity discussions, viral clips, humorous content, pop-culture commentary,
+      short-form entertainment, and general online entertainment content.
+
+  - parent_label: News & Current Affairs
+    description: >
+      News reports, current events, politics, government, public affairs,
+      elections, policy discussions, journalism, interviews, debates,
+      social issues, and civic or world affairs commentary.
+
+  - parent_label: Sports
+    description: >
+      Sports highlights, match analysis, athlete interviews, tournaments,
+      team discussions, player moments, training clips, sports commentary,
+      competitive events, and recreational or professional sports content.
+
+  - parent_label: Education & Learning
+    description: >
+      Tutorials, lectures, courses, explainers, academic learning, study material,
+      skill development, educational videos, how-to guides, documentaries,
+      professional learning, and knowledge-based content.
+
+  - parent_label: Technology & Computing
+    description: >
+      Software, programming, artificial intelligence, data science, cybersecurity,
+      gadgets, cloud computing, product reviews, technical tutorials,
+      engineering concepts, developer tools, and technology explainers.
+
+  - parent_label: Gaming
+    description: >
+      Gameplay, game streams, esports, walkthroughs, gaming commentary,
+      live-stream highlights, game reviews, speedruns, multiplayer games,
+      competitive gaming, and gaming culture.
+
+  - parent_label: Motivation & Self-improvement
+    description: >
+      Motivation, discipline, productivity, personal growth, confidence,
+      habits, goal-setting, success advice, inspirational content,
+      mindset, life lessons, and self-improvement content.
+
+  - parent_label: Social & Lifestyle
+    description: >
+      Relationships, friendships, family, vlogs, daily life, influencers,
+      lifestyle advice, personal stories, social trends, identity,
+      communication, dating, and everyday life content.
+
+  - parent_label: Music & Performance
+    description: >
+      Songs, music videos, concerts, dance, singing, live performances,
+      artists, remixes, covers, stage performances, music commentary,
+      and performing arts content.
+
+  - parent_label: Health & Fitness
+    description: >
+      Exercise, workouts, nutrition, diet, wellness, physical health,
+      mental wellbeing, fitness routines, training advice, healthy habits,
+      medical explainers, and general health-related content.
+
+  - parent_label: Finance & Business
+    description: >
+      Money, investing, entrepreneurship, business strategy, personal finance,
+      economics, careers, startups, markets, workplace advice,
+      financial literacy, and business education content.
+
+  - parent_label: Movies & Television
+    description: >
+      Films, television shows, trailers, scenes, actor interviews, reviews,
+      web series, streaming content, entertainment news, cinema analysis,
+      and screen entertainment.
+
+  - parent_label: Travel & Places
+    description: >
+      Travel vlogs, tourism, places, cities, countries, cultural experiences,
+      food travel, local guides, destination reviews, outdoor exploration,
+      and location-based lifestyle content.
+
+  - parent_label: Food & Cooking
+    description: >
+      Recipes, cooking tutorials, restaurant reviews, food challenges,
+      cuisine, meal preparation, baking, street food, nutrition-related food content,
+      and culinary entertainment.
+
+  - parent_label: Science & Nature
+    description: >
+      Science explainers, nature, animals, space, environment, climate,
+      experiments, research, biology, physics, geography, and natural-world content.
+
+  - parent_label: General / Mixed
+    description: >
+      Mixed, unclear, broad, or low-confidence content that does not strongly
+      match a single parent topic category.
