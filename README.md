@@ -180,6 +180,96 @@ This turns watch history into a time-based behavioural map.
 
 <img width="1536" height="1024" alt="project_screenshot" src="https://github.com/user-attachments/assets/37a6e6a9-d407-4b74-bb28-76e1fe1c20bb" />
 
+## Running locally
+
+EchoShield runs as three services: PostgreSQL, a Spring Boot API, and a React frontend.
+The Python enrichment pipeline is triggered by the backend after upload.
+
+### Prerequisites
+- Java 21+, Maven
+- Node.js 20+
+- Python 3.10+
+- PostgreSQL (default: `localhost:5433`)
+- A YouTube watch-history export from [Google Takeout](https://takeout.google.com)
+
+---
+
+### 1. Clone and set up
+
+```bash
+git clone https://github.com/<your-username>/echo-shield.git
+cd echo-shield
+```
+
+Create the database:
+```bash
+createdb echoshield
+psql -d echoshield -f database/migrations/schema.sql
+```
+
+Set up the Python pipeline:
+```bash
+cd ingestion-pipeline
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cd ..
+chmod +x scripts/run_profile_pipeline.sh
+```
+
+---
+
+### 2. Configure the backend
+
+Edit `backend/src/main/resources/application.yml` and update these two paths for your machine:
+
+```yaml
+echoshield:
+  embedding:
+    python-executable: /absolute/path/to/ingestion-pipeline/.venv/bin/python
+    pipeline-dir: /absolute/path/to/ingestion-pipeline
+```
+
+If your PostgreSQL runs on port `5432` instead of `5433`, update the datasource URL too.
+
+---
+
+### 3. Start the backend
+
+```bash
+cd backend && mvn spring-boot:run
+```
+
+Verify: `curl http://localhost:8080/actuator/health` → `{"status":"UP"}`
+
+---
+
+### 4. Start the frontend
+
+```bash
+cd frontend
+echo "VITE_API_BASE_URL=http://localhost:8080" > .env.local
+npm install && npm run dev
+```
+
+Open `http://localhost:5173` and upload your watch-history file.
+
+---
+
+### Troubleshooting
+
+**PostgreSQL not connecting** — check the port matches `application.yml`: `pg_isready -p 5433`
+
+**Enrichment stuck** — check the pipeline log:
+```bash
+cat backend/uploads/imports/<import-job-id>/pipeline.log
+```
+
+**Dashboard loads but charts are empty** — enrichment runs asynchronously. Check progress:
+```bash
+curl http://localhost:8080/api/profiles/<profileId>/embedding-progress
+```
+Status moves through `PENDING → RUNNING → ENRICHING → COMPLETED`.
+
 
 
 
