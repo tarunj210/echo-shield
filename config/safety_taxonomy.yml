@@ -1,0 +1,95 @@
+categories:
+  - category: cyberbullying
+    topic: Online harassment and abusive personal attacks
+    base_risk: 0.75
+    description: >
+      Abusive personal attacks, harassment, bullying, insults, humiliation,
+      threats, intimidation, mocking, verbal abuse, targeted cruelty,
+      hostile messages, repeated abuse, shaming, aggressive comments,
+      toxic replies, name-calling, and messages intended to hurt or scare someone.
+
+  - category: self_harm
+    topic: Mental health concern
+    base_risk: 0.90
+    description: >
+      Content cluster involving self-harm, suicide, suicidal thoughts, depression,
+      hopelessness, emotional crisis, mental breakdown, and wanting to die.
+
+  - category: body_image
+    topic: Body image and eating behaviour
+    base_risk: 0.70
+    description: >
+      Content cluster about extreme dieting, body image pressure, eating disorders,
+      weight loss obsession, thinness, appearance anxiety, anorexia, bulimia,
+      and unhealthy body comparison.
+
+  - category: violence
+    topic: Violence and aggression
+    base_risk: 0.80
+    description: >
+      Content cluster showing or discussing physical violence, fighting, attacks,
+      weapons, blood, assault, street fights, shootings, and aggressive behaviour.
+
+  - category: hate_or_extremism
+    topic: Hate speech and identity-based abuse
+    base_risk: 0.85
+    description: >
+      Hate speech, identity-based abuse, racist abuse, sexist abuse,
+      religious hate, ethnicity-based attacks, dehumanising language,
+      extremist ideology, targeted abuse against protected identity groups,
+      discriminatory insults, and hostile comments about race, religion,
+      gender, nationality, sexuality, or ethnicity.
+
+  - category: adult_content
+    topic: Adult or sexual content
+    base_risk: 0.80
+    description: >
+      Content cluster about adult sexual content, explicit material, nudity,
+      pornography, sexual themes, NSFW content, or inappropriate sexual material.
+
+  - category: gambling
+    topic: Gambling and betting
+    base_risk: 0.70
+    description: >
+      Content cluster about gambling, betting, online casinos, sports betting,
+      poker, roulette, jackpots, slots, wagering, and risky financial games.
+
+  - category: gaming_distraction
+    topic: Gaming and screen-time concern
+    base_risk: 0.45
+    description: >
+      Content cluster about gaming videos, gameplay, streaming, Fortnite,
+      Minecraft, Roblox, Valorant, Twitch clips, battle royale games,
+      speedruns, ranked matches, and excessive screen-time patterns.
+
+  - category: misinformation
+    topic: Misinformation and conspiracy
+    base_risk: 0.65
+    description: >
+      Content cluster about conspiracy theories, misinformation, fake news,
+      hoaxes, secret agendas, cover-ups, manipulated narratives,
+      misleading claims, and distrust campaigns.
+
+  - category: social_conflict
+    topic: Social pressure and conflict
+    base_risk: 0.55
+    description: >
+      Content cluster about drama, relationship conflict, friendship problems,
+      betrayal, peer pressure, public embarrassment, shame, rejection,
+      toxic friends, and social comparison.
+
+  - category: educational
+    topic: Educational or learning content
+    base_risk: 0.05
+    description: >
+      Content cluster about educational content, tutorials, lectures, courses,
+      school lessons, university material, programming tutorials, mathematics,
+      science, history, exam preparation, and documentaries.
+
+  - category: low_or_unknown
+    topic: General or non-safety-relevant content
+    base_risk: 0.10
+    description: >
+      Neutral, general, educational, professional, entertainment,
+      everyday conversation, technical content, harmless discussion,
+      or content that does not clearly match a safety-risk category.

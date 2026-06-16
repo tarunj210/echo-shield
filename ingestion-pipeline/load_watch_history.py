@@ -1,3 +1,4 @@
+import argparse
 import sys
 from datetime import datetime
 from email.utils import parsedate_to_datetime
@@ -6,29 +7,38 @@ from parse_takeout_history import parse_watch_history
 from db import get_connection
 
 
+from datetime import datetime
+from email.utils import parsedate_to_datetime
+from zoneinfo import ZoneInfo
+
+MELBOURNE_TZ = ZoneInfo("Australia/Melbourne")
+
+
 def normalise_timestamp(timestamp: str) -> datetime:
-    """
-    Handles both:
-    - JSON timestamps: 2026-06-01T10:30:00.000Z
-    - HTML timestamps: Jun 1, 2026, 10:30:00 PM GMT+10
-    """
     if not timestamp:
         raise ValueError("Missing timestamp")
 
-    # JSON format
     try:
-        return datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+
+        if parsed.tzinfo is not None:
+            return parsed.astimezone(MELBOURNE_TZ).replace(tzinfo=None)
+
+        return parsed
     except ValueError:
         pass
 
-    # HTML format from Google Takeout
     try:
         cleaned = timestamp.replace("UTC", "GMT")
-        return parsedate_to_datetime(cleaned)
+        parsed = parsedate_to_datetime(cleaned)
+
+        if parsed.tzinfo is not None:
+            return parsed.astimezone(MELBOURNE_TZ).replace(tzinfo=None)
+
+        return parsed
     except Exception:
         pass
 
-    # Last fallback for common Takeout variants
     formats = [
         "%b %d, %Y, %I:%M:%S %p %Z",
         "%d %b %Y, %H:%M:%S %Z",
@@ -48,15 +58,26 @@ def normalise_timestamp(timestamp: str) -> datetime:
 def ensure_profile(cursor, profile_id: str):
     cursor.execute(
         """
-        INSERT INTO profiles (profile_id, display_name, profile_type)
-        VALUES (%s, %s, %s)
+        INSERT INTO profiles (
+            profile_id,
+            display_name,
+            profile_type,
+            tenant_id,
+            created_at
+        )
+        VALUES (%s, %s, %s, %s, CURRENT_TIMESTAMP)
         ON CONFLICT (profile_id) DO NOTHING
         """,
-        (profile_id, "Demo Profile", "personal_export"),
+        (
+            profile_id,
+            "Uploaded Profile" if profile_id != "profile_self" else "Demo Profile",
+            "personal_export",
+            "default_tenant",
+        ),
     )
 
 
-def insert_events(events: list[dict]):
+def insert_events(events: list[dict], source_override: str | None = None):
     connection = get_connection()
 
     inserted = 0
@@ -73,6 +94,8 @@ def insert_events(events: list[dict]):
 
                 for event in events:
                     try:
+                        watched_at = normalise_timestamp(event["watched_at"])
+
                         cursor.execute(
                             """
                             INSERT INTO raw_watch_events (
@@ -84,17 +107,19 @@ def insert_events(events: list[dict]):
                                 raw_url
                             )
                             VALUES (%s, %s, %s, %s, %s, %s)
+                            ON CONFLICT DO NOTHING
                             """,
                             (
                                 event["profile_id"],
                                 event["video_id"],
-                                normalise_timestamp(event["watched_at"]),
-                                event["source"],
-                                event["raw_title"],
-                                event["raw_url"],
+                                watched_at,
+                                source_override or event.get("source") or "google_takeout",
+                                event.get("raw_title"),
+                                event.get("raw_url"),
                             ),
                         )
-                        inserted += 1
+
+                        inserted += cursor.rowcount
 
                     except Exception as error:
                         skipped += 1
@@ -107,16 +132,61 @@ def insert_events(events: list[dict]):
     return inserted, skipped
 
 
-def main():
-    if len(sys.argv) < 2:
+def update_import_job(import_job_id: str | None, total_events: int, inserted_events: int, skipped_events: int):
+    if not import_job_id:
+        return
+
+    connection = get_connection()
+
+    try:
+        with connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    UPDATE import_jobs
+                    SET total_events = %s,
+                        inserted_events = %s,
+                        error_message = NULL
+                    WHERE import_job_id = %s
+                    """,
+                    (
+                        total_events,
+                        inserted_events,
+                        import_job_id,
+                    ),
+                )
+    finally:
+        connection.close()
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("positional_input_file", nargs="?")
+    parser.add_argument("positional_profile_id", nargs="?")
+
+    parser.add_argument("--input-file", dest="input_file")
+    parser.add_argument("--profile-id", dest="profile_id")
+    parser.add_argument("--source", default=None)
+    parser.add_argument("--import-job-id", default=None)
+
+    args = parser.parse_args()
+
+    input_file = args.input_file or args.positional_input_file
+    profile_id = args.profile_id or args.positional_profile_id or "profile_self"
+
+    if not input_file:
         raise RuntimeError(
-            "Usage: python load_watch_history.py ../data/raw/watch-history.html"
+            "Usage: python load_watch_history.py --input-file <path> --profile-id <profile_id>"
         )
 
-    file_path = sys.argv[1]
-    profile_id = sys.argv[2] if len(sys.argv) >= 3 else "profile_self"
+    return input_file, profile_id, args.source, args.import_job_id
 
-    events = parse_watch_history(file_path, profile_id=profile_id)
+
+def main():
+    input_file, profile_id, source, import_job_id = parse_args()
+
+    events = parse_watch_history(input_file, profile_id=profile_id)
 
     print(f"Parsed {len(events)} valid watch events")
 
@@ -124,7 +194,14 @@ def main():
         print("Sample event:")
         print(events[0])
 
-    inserted, skipped = insert_events(events)
+    inserted, skipped = insert_events(events, source_override=source)
+
+    update_import_job(
+        import_job_id=import_job_id,
+        total_events=len(events),
+        inserted_events=inserted,
+        skipped_events=skipped,
+    )
 
     print(f"Inserted: {inserted}")
     print(f"Skipped: {skipped}")

@@ -1,0 +1,141 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+  --font-display: "Space Grotesk", "Inter", sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Severity palette (semantic) */
+  --color-sev-info: var(--sev-info);
+  --color-sev-low: var(--sev-low);
+  --color-sev-medium: var(--sev-medium);
+  --color-sev-high: var(--sev-high);
+  --color-sev-critical: var(--sev-critical);
+
+  /* Topic palette */
+  --color-topic-1: var(--topic-1);
+  --color-topic-2: var(--topic-2);
+  --color-topic-3: var(--topic-3);
+  --color-topic-4: var(--topic-4);
+  --color-topic-5: var(--topic-5);
+  --color-topic-6: var(--topic-6);
+
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-grid: var(--grid);
+}
+
+:root {
+  --radius: 0.5rem;
+
+  /* Forensic monitoring lab — deep midnight + electric cyan */
+  --background: oklch(0.16 0.025 250);
+  --foreground: oklch(0.96 0.01 240);
+  --surface-1: oklch(0.20 0.028 250);
+  --surface-2: oklch(0.24 0.030 250);
+  --grid: oklch(0.32 0.025 250);
+
+  --card: oklch(0.20 0.028 250);
+  --card-foreground: oklch(0.96 0.01 240);
+  --popover: oklch(0.20 0.028 250);
+  --popover-foreground: oklch(0.96 0.01 240);
+
+  --primary: oklch(0.82 0.16 200);          /* electric cyan */
+  --primary-foreground: oklch(0.15 0.03 250);
+  --secondary: oklch(0.28 0.03 250);
+  --secondary-foreground: oklch(0.96 0.01 240);
+  --muted: oklch(0.24 0.025 250);
+  --muted-foreground: oklch(0.68 0.02 250);
+  --accent: oklch(0.78 0.18 75);            /* amber accent */
+  --accent-foreground: oklch(0.15 0.03 250);
+  --destructive: oklch(0.66 0.23 25);
+  --destructive-foreground: oklch(0.98 0 0);
+
+  --border: oklch(0.30 0.025 250);
+  --input: oklch(0.30 0.025 250);
+  --ring: oklch(0.82 0.16 200);
+
+  /* Severity scale */
+  --sev-info:     oklch(0.75 0.05 240);
+  --sev-low:      oklch(0.78 0.15 155);
+  --sev-medium:   oklch(0.80 0.16 90);
+  --sev-high:     oklch(0.74 0.18 45);
+  --sev-critical: oklch(0.66 0.24 22);
+
+  /* Topic palette — distinguishable in dark */
+  --topic-1: oklch(0.78 0.16 200);  /* cyan */
+  --topic-2: oklch(0.78 0.15 155);  /* mint */
+  --topic-3: oklch(0.78 0.18 75);   /* amber */
+  --topic-4: oklch(0.72 0.20 25);   /* coral */
+  --topic-5: oklch(0.72 0.18 305);  /* violet */
+  --topic-6: oklch(0.80 0.14 250);  /* periwinkle */
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html, body { height: 100%; }
+  body {
+    background: radial-gradient(ellipse at top, oklch(0.20 0.04 250) 0%, var(--color-background) 60%);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.01em; }
+  .font-mono, code, .tabular { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+}
+
+/* Subtle scan-line texture for the dashboard */
+.scanlines {
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent 0,
+    transparent 3px,
+    oklch(1 0 0 / 0.012) 3px,
+    oklch(1 0 0 / 0.012) 4px
+  );
+}
+
+.panel {
+  background: linear-gradient(180deg, var(--color-surface-1), var(--color-surface-2));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 0 oklch(1 0 0 / 0.04) inset, 0 20px 40px -30px oklch(0 0 0 / 0.6);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.68rem;
+  color: var(--color-muted-foreground);
+  font-family: var(--font-mono);
+}
