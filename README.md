@@ -176,4 +176,12 @@ This turns watch history into a time-based behavioural map.
 <img width="2880" height="1732" alt="echoshield_architecture" src="https://github.com/user-attachments/assets/8c084837-a304-4ed5-b8ce-fd449f09327d" />
 
 
+## Screenshots
+
+<img width="1536" height="1024" alt="project_screenshot" src="https://github.com/user-attachments/assets/37a6e6a9-d407-4b74-bb28-76e1fe1c20bb" />
+
+
+
+
+
 
