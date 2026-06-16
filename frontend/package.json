@@ -48,6 +48,7 @@
     "react": "latest",
     "react-day-picker": "latest",
     "react-dom": "latest",
+    "react-force-graph-2d": "^1.29.1",
     "react-hook-form": "latest",
     "react-resizable-panels": "latest",
     "recharts": "latest",

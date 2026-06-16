@@ -12,7 +12,7 @@ cd "$PIPELINE_DIR"
 
 source .venv/bin/activate
 
-echo "Starting EchoShield pipeline"
+echo "Starting EchoShield UI-ready pipeline"
 echo "Import job: $IMPORT_JOB_ID"
 echo "Profile ID: $PROFILE_ID"
 echo "Input file: $INPUT_FILE"
@@ -26,41 +26,12 @@ python load_watch_history.py \
 python fetch_youtube_metadata.py \
   --profile-id "$PROFILE_ID"
 
-#python build_channel_graph.py \
-#  --profile-id "$PROFILE_ID" \
-#  --session-gap-minutes 120
-
-echo "Graph-ready pipeline completed"
-
-python generate_video_embeddings.py
-
-python build_similarity_edges.py
-
-python discover_semantic_clusters.py
-
-python label_clusters_keybert.py
-
-python dynamic_refine_cluster_labels.py \
-  --taxonomy ../config/topic_taxonomy.yml \
-  --threshold 0.17 \
-  --min-margin 0.02
-
-python map_clusters_to_taxonomy.py
-
-python calculate_echo_chamber_scores.py \
+python build_watch_sessions.py \
   --profile-id "$PROFILE_ID" \
-  --window-days 365 \
-  --min-watch-count 5 \
-  --min-score 15
+  --session-gap-minutes 120
 
-python calculate_temporal_drift.py \
-  --profile-id "$PROFILE_ID" \
-  --granularity weekly \
-  --periods 12
+echo "UI-ready pipeline completed successfully"
+echo "Dashboard can now load for profile: $PROFILE_ID"
 
-python calculate_temporal_drift.py \
-  --profile-id "$PROFILE_ID" \
-  --granularity monthly \
-  --periods 6
-
-echo "EchoShield pipeline completed successfully"
+echo "Skipping semantic enrichment in blocking upload pipeline"
+echo "Embeddings, similarity edges, clustering, taxonomy mapping, echo scores, and drift will run asynchronously"

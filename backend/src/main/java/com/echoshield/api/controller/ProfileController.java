@@ -1,10 +1,13 @@
 package com.echoshield.api.controller;
-
+import com.echoshield.api.repository.AnalyticsRepository;
 import com.echoshield.api.dto.*;
 import com.echoshield.api.service.AnalyticsService;
 import org.springframework.web.bind.annotation.*;
+import com.echoshield.api.dto.SessionTrajectoryDto;
+import com.echoshield.api.dto.WatchSessionDto;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api")
@@ -50,4 +53,6 @@ public class ProfileController {
     ) {
         return analyticsService.getTopicTimeseries(profileId, granularity);
     }
+
+    
 }

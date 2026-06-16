@@ -7,27 +7,35 @@ from parse_takeout_history import parse_watch_history
 from db import get_connection
 
 
+from datetime import datetime
+from email.utils import parsedate_to_datetime
+from zoneinfo import ZoneInfo
+
+MELBOURNE_TZ = ZoneInfo("Australia/Melbourne")
+
+
 def normalise_timestamp(timestamp: str) -> datetime:
-    """
-    Handles both:
-    - JSON timestamps: 2026-06-01T10:30:00.000Z
-    - HTML timestamps: Jun 1, 2026, 10:30:00 PM GMT+10
-    """
     if not timestamp:
         raise ValueError("Missing timestamp")
 
-    # JSON ISO format
     try:
         parsed = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
-        return parsed.replace(tzinfo=None)
+
+        if parsed.tzinfo is not None:
+            return parsed.astimezone(MELBOURNE_TZ).replace(tzinfo=None)
+
+        return parsed
     except ValueError:
         pass
 
-    # Google Takeout HTML format
     try:
         cleaned = timestamp.replace("UTC", "GMT")
         parsed = parsedate_to_datetime(cleaned)
-        return parsed.replace(tzinfo=None)
+
+        if parsed.tzinfo is not None:
+            return parsed.astimezone(MELBOURNE_TZ).replace(tzinfo=None)
+
+        return parsed
     except Exception:
         pass
 

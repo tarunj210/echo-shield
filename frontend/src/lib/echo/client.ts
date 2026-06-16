@@ -3,6 +3,10 @@ import type {
     ProfileOverview,
     TemporalDrift,
     TopicExposurePoint,
+    SessionTrajectory, 
+    WatchSession,
+    SessionSummaryGraph,
+    EmbeddingProgress
   } from "./types";
   
   import {
@@ -143,6 +147,91 @@ import type {
     if (!response.ok) {
       const message = await response.text();
       throw new Error(`Import status failed: ${response.status} ${message}`);
+    }
+  
+    return response.json();
+  }
+
+  export async function getWatchSessions(
+    profileId: string,
+    limit = 30
+  ): Promise<WatchSession[]> {
+    const response = await fetch(
+      `${BASE}/api/profiles/${profileId}/sessions?limit=${limit}`
+    );
+  
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(`Watch sessions failed: ${response.status} ${message}`);
+    }
+  
+    return response.json();
+  }
+  
+  export async function getSessionTrajectory(
+    profileId: string,
+    sessionId: string
+  ): Promise<SessionTrajectory> {
+    const response = await fetch(
+      `${BASE}/api/profiles/${profileId}/sessions/${sessionId}/trajectory`
+    );
+  
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(`Session trajectory failed: ${response.status} ${message}`);
+    }
+  
+    return response.json();
+  }
+
+  export async function getSessionSummaryGraph(
+    profileId: string,
+    limit = 50
+  ): Promise<SessionSummaryGraph> {
+    const response = await fetch(
+      `${BASE}/api/profiles/${profileId}/session-summary-graph?limit=${limit}`
+    );
+  
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(`Session summary graph failed: ${response.status} ${message}`);
+    }
+  
+    return response.json();
+  }
+
+  export async function getEmbeddingProgress(
+    profileId: string,
+  ): Promise<EmbeddingProgress> {
+    const response = await fetch(
+      `${BASE}/api/profiles/${profileId}/embedding-progress`,
+    );
+  
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(
+        `Embedding progress failed: ${response.status} ${message}`,
+      );
+    }
+  
+    return response.json();
+  }
+  
+  export async function startEmbeddingJob(
+    profileId: string,
+  ): Promise<EmbeddingProgress> {
+    const response = await fetch(
+      `${BASE}/api/profiles/${profileId}/embedding-jobs/start`,
+      {
+        method: "POST",
+      },
+    );
+  
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(
+        `Start embedding job failed: ${response.status} ${message}`,
+      );
     }
   
     return response.json();

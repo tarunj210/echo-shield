@@ -16,9 +16,15 @@ spring:
       max-file-size: 50MB
       max-request-size: 50MB
 
+    
+
 echoshield:
   uploads-dir: uploads/imports
   pipeline-script: ../scripts/run_profile_pipeline.sh
+  embedding:
+      python-executable: /Users/tarunjain/echo-shield/ingestion-pipeline/.venv/bin/python
+      pipeline-dir: /Users/tarunjain/echo-shield/ingestion-pipeline
+      batch-size: 64
 
 management:
   endpoints:
