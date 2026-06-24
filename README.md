@@ -204,7 +204,7 @@ cd echo-shield
 Create the database:
 ```bash
 createdb echoshield
-psql -d echoshield -f database/migrations/schema.sql
+psql -d echoshield -f infra/postgres/schema.sql
 ```
 
 Set up the Python pipeline:
